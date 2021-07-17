@@ -39,27 +39,37 @@ bool pedirJogada(int rodada) {
       printf("Jogador 1: ");
       scanf("%d", &coord);
 
-      if (coord == 'q') return false;
-
-      if (jogo[coord - 1] == ' ') {
-        jogo[coord - 1] = 'x';
-        validacao = false;
+      if (coord == 0) {
+        jogador = coord;
+        return false;
       } else {
-        validacao = true;
-        printf("Inválido. Tente de novo!\n");
+        if (jogo[coord - 1] == ' ') {
+          jogo[coord - 1] = 'x';
+          validacao = false;
+        } else {
+          validacao = true;
+          printf("Inválido. Tente de novo!\n");
+        }
       }
+
 
     } else {
       printf("Jogador 2: ");
       scanf("%d", &coord);
 
-      if (jogo[coord - 1] == ' ') {
-        jogo[coord - 1] = 'o';
-        validacao = false;
+      if (coord == 0) {
+        jogador = coord;
+        return false;
       } else {
-        validacao = true;
-        printf("Inválido. Tente de novo!\n\n");
+        if (jogo[coord - 1] == ' ') {
+          jogo[coord - 1] = 'o';
+          validacao = false;
+        } else {
+          validacao = true;
+          printf("Inválido. Tente de novo!\n\n");
+        }
       }
+
     }
   } while(validacao);
 
@@ -68,88 +78,49 @@ bool pedirJogada(int rodada) {
 
 // Verifica se o há um ganhador
 void ganhador() {
-  if(
-    jogo[0] == jogo[1]
-    &&
-    jogo[1] == jogo[2]
-    &&
-    jogo[0] != ' '
-  ) {
+  if(jogo[0] != ' ' && (
+    (jogo[0] == jogo[1] && jogo[1] == jogo[2])
+    ||
+    (jogo[0] == jogo[3] && jogo[3] == jogo[6])
+    ||
+    (jogo[0] == jogo[4] && jogo[4] == jogo[8])
+  )) {
     jogador = jogo[0];
     winner = true;
   } else if(
-    jogo[3] == jogo[4]
+    jogo[2] != ' '
     &&
-    jogo[4] == jogo[5]
-    &&
-    jogo[3] != ' '
+    (jogo[2] == jogo[5] && jogo[5] == jogo[8])
   ) {
-    jogador = jogo[3];
+    jogador = jogo[2];
+    winner = true;
+  } else if (jogo[4] != ' ' && (
+    (jogo[4] == jogo[6] && jogo[4] == jogo[2])
+    ||
+    (jogo[4] == jogo[3] && jogo[4] == jogo[5])
+    ||
+    (jogo[4] == jogo[1] && jogo[4] == jogo[7])
+  )) {
+    jogador = jogo[4];
     winner = true;
   } else if(
-    jogo[6] == jogo[7]
-    &&
-    jogo[7] == jogo[8]
-    &&
     jogo[6] != ' '
+    &&
+    (jogo[6] == jogo[7] && jogo[6] == jogo[8])
   ) {
     jogador = jogo[6];
-    winner = true;
-  } else if(
-    jogo[0] == jogo[3]
-    &&
-    jogo[3] == jogo[6]
-    &&
-    jogo[0] != ' '
-  ) {
-    jogador = jogo[0];
-    winner = true;
-  } else if(
-    jogo[1] == jogo[4]
-    &&
-    jogo[4] == jogo[7]
-    &&
-    jogo[1] != ' '
-  ) {
-    jogador = jogo[1];
-    winner = true;
-  } else if(
-    jogo[2] == jogo[5]
-    &&
-    jogo[5] == jogo[8]
-    &&
-    jogo[2] != ' '
-  ) {
-    jogador = jogo[2];
-    winner = true;
-  } else if(
-    jogo[0] == jogo[4]
-    &&
-    jogo[4] == jogo[8]
-    &&
-    jogo[0] != ' '
-  ) {
-    jogador = jogo[0];
-    winner = true;
-  } else if(
-    jogo[2] == jogo[4]
-    &&
-    jogo[4] == jogo[6]
-    &&
-    jogo[2] != ' '
-  ) {
-    jogador = jogo[2];
     winner = true;
   }
 }
 
 // Inicia o jogo
 void rodarJogo() {
-  printf("============ Jogo da velha ============\n\n");
-
+  printf("============ Jogo da velha ============\n");
+  printf("Para jogar, o jogador deve digitar a posição em que quer colocar 'x' ou 'o', como está representada a seguir:\n\n");
+  
   printJogo(0);
 
-  printf("Se o jogo empatar, digite 'q' e rode o algoritmo novamente.\n");
+  printf("Caso empate ou queira começar de novo, digite '0'.\n");
 
   for (
     int rodada = 1;
@@ -166,17 +137,22 @@ void rodarJogo() {
     if(rodada > 4) ganhador();
   }
 
-  if(jogador == 'x') jogador = 1;
-  if(jogador == 'o') jogador = 2;
-  
-  printf("Jogador %i venceu. PARABÉNS!", jogador);
+  if(jogador == 0) {
+    continuaOJogo = true;
+    printf("Parece que ninguém venceu.");
+  } else {
+    if(jogador == 'x') jogador = 1;
+    else if(jogador == 'o') jogador = 2;
+
+    printf("Jogador %i venceu. PARABÉNS!", jogador);
+  }
 }
 
 int main(void) {
   system("tput reset");
+  int continua;
   
   do {
-    int continua;
 
     rodarJogo();
 
