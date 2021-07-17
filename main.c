@@ -43,7 +43,13 @@ bool pedirJogada(int rodada) {
         jogador = coord;
         return false;
       } else {
-        if (jogo[coord - 1] == ' ') {
+        if (
+          jogo[coord - 1] == ' '
+          &&
+          coord > -1
+          &&
+          coord < 10
+        ) {
           jogo[coord - 1] = 'x';
           validacao = false;
         } else {
@@ -55,18 +61,24 @@ bool pedirJogada(int rodada) {
 
     } else {
       printf("Jogador 2: ");
-      scanf("%d", &coord);
+      coord = rand() % 9 + 1;
 
       if (coord == 0) {
         jogador = coord;
         return false;
       } else {
-        if (jogo[coord - 1] == ' ') {
+        if (
+          jogo[coord - 1] == ' '
+          &&
+          coord > -1
+          &&
+          coord < 9
+        ) {
+          printf("%d \n", coord);
           jogo[coord - 1] = 'o';
           validacao = false;
         } else {
           validacao = true;
-          printf("Inválido. Tente de novo!\n\n");
         }
       }
 
